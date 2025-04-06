@@ -1,0 +1,60 @@
+sudo apt update && sudo apt upgrade -y
+
+sudo apt install cups -y
+
+sudo systemctl start cups
+sudo systemctl enable cups
+
+sudo systemctl status cups
+
+sudo nano /etc/cups/cupsd.conf
+
+# Allow remote administration
+Port 631
+Listen 0.0.0.0:631
+
+# Restrict access to the server
+<Location />
+    Order allow,deny
+    Allow all
+</Location>
+
+<Location /admin>
+    Order allow,deny
+    Allow all
+</Location>
+
+sudo systemctl restart cups
+
+http://localhost:631/admin (From Brwoser)
+
+sudo apt install cups -y
+
+sudo nano /etc/cups/client.conf
+
+ServerName <server_ip>
+
+lp -d <printer_name> /path/to/filename
+
+#!/bin/bash
+
+# Install CUPS
+sudo apt update
+sudo apt install cups -y
+
+# Start and enable CUPS
+sudo systemctl start cups
+sudo systemctl enable cups
+
+# Configure CUPS for remote access
+sudo sed -i 's/Listen localhost:631/Listen 0.0.0.0:631/g' /etc/cups/cupsd.conf
+sudo sed -i 's/<Location \/>/<Location \/>\n  Allow all/' /etc/cups/cupsd.conf
+sudo sed -i 's/<Location \/admin>/<Location \/admin>\n  Allow all/' /etc/cups/cupsd.conf
+
+# Restart CUPS
+sudo systemctl restart cups
+
+echo "CUPS Print Server Setup Complete. Access it at http://<server_ip>:631"
+
+chmod +x setup_print_server.sh
+./setup_print_server.sh
